@@ -1,19 +1,40 @@
 import cv2, time
 from threading import Thread, Lock
+import warnings
+from PIL import Image, ImageTk
 
-class Vision():
+class Vision(Thread):
     
     def __init__(self):
+        Thread.__init__(self)
+        self.__ALIVE = True
         self.__video = cv2.VideoCapture(0)
+        self.__frame = []
 
     def __del__(self):
         self.__video.release()
 
+    def run(self):
+        while self.__ALIVE:
+            ret, frame = self.__video.read()
+            if ret == False:
+                warnings.warn("An error occured during get the frame")
+                frame = None
+            self.__frame = frame
+
+    def getPhoto(self):
+        frame = self.__frame 
+
+        if frame == []:
+            return None
+
+        return ImageTk.PhotoImage(Image.fromarray(frame))
+
     def getFrame(self):
-        ret, frame = self.__video.read()
-        if ret == False:
-            print("errorrrr")
-        return frame
+        return self.__frame
+
+    def kill(self):
+        self.__ALIVE = False
 
 
 class Vision2(Thread):

@@ -6,8 +6,8 @@ class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.__routes = {}
-        self.__width = 300
-        self.__height = 300
+        self.__width = 600
+        self.__height = 800
         self.__route = "homepage"
         self.__FPS = 30
 

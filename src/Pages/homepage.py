@@ -8,7 +8,7 @@ def handle(L):
     L.append("click")
 
 def sayHi():
-    print("hi")
+    pass
 
 def render(page: Page):
 

@@ -1,12 +1,15 @@
 import tkinter as tk
 from Bia import *
+from datetime import datetime
 
 def render(page: Page):
+
+    FPS = 30
 
     buffer = Queue()
     handle = HandleEvent(buffer)
 
-    t = Timer(1, handle.timer)
+    t = Timer(1/FPS, handle.timer)
     t.start()
 
     parent = page.parent()
@@ -14,20 +17,44 @@ def render(page: Page):
     frame.bind("<Key>", handle.keyboard)
     frame.pack()
 
+    canvas = tk.Canvas(frame,bg="pink", width=640, height=480)
+    canvas.pack()
+
+    camera = Vision()
+    camera.start()
+
     frame.focus_set()
 
-    while True:
-        parent.update()
-        if buffer.empty() == False:
-            ev = buffer.front()
-            buffer.pop()
+    alive = True
 
-            print(ev["origin"])
-            if ev["origin"] == "keyboard" and ev["keycode"] == 32:
-                break
+    parent.update()
+
+    while alive:
+        
+        if buffer.empty():
+            continue
+        
+        event = buffer.front()
+        buffer.pop()
+        if event["origin"] == "timer":
+            imgT = camera.getPhoto()
+            if imgT == None:
+                continue
+
+            imgT = camera.getPhoto()
+            canvas.create_image((0,0),anchor=tk.NW, image=imgT)
+            parent.update()
+
+        elif event["origin"] == "keyboard":
+            if event["keycode"] == 32:
+                alive = False
+            else:
+                print(event["keycode"])
+
     
     frame.destroy()
     t.kill()
+    camera.kill()
 
     return False
     
