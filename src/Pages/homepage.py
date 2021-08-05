@@ -29,7 +29,7 @@ def render(page: Page):
 
         if len(L) > 0:
             alive = False
-        parent.update()
+        parent.flip()
 
     frame.destroy()
     t.kill()

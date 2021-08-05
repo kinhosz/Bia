@@ -6,16 +6,31 @@ class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.__routes = {}
-        self.__width = 600
-        self.__height = 800
+        self.__width = 900
+        self.__height = 700
         self.__route = "homepage"
         self.__FPS = 30
+        self.__close = False
 
         # inital configs
         self.__resize()
+        self.protocol("WM_DELETE_WINDOW", self.__on_close)
+
+    def shape(self):
+        return (self.__width, self.__height)
+
+    def __on_close(self):
+        self.__close = True
+
+    def flip(self):
+        if self.__close:
+            return False
+        
+        self.update()
+        return True
 
     def __resize(self):
-        self.geometry(str(self.__height) + "x" + str(self.__width))
+        self.geometry(str(self.__width) + "x" + str(self.__height))
         self.resizable(False,False)
 
     def resize(self, widht, height):
