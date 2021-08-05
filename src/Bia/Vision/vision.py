@@ -28,7 +28,8 @@ class Vision(Thread):
         if frame == []:
             return None
 
-        return ImageTk.PhotoImage(Image.fromarray(frame))
+        frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+        return ImageTk.PhotoImage(Image.fromarray(frame,mode="RGB"))
 
     def getFrame(self):
         return self.__frame
