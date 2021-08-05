@@ -9,25 +9,39 @@ def render(page: Page):
     buffer = Queue()
     handle = HandleEvent(buffer)
 
+    camera = Vision()
+    camera.start()
+
     t = Timer(1/FPS, handle.timer)
     t.start()
 
     parent = page.parent()
-    frame = tk.Frame(parent)
+    WIDTH, HEIGHT = parent.shape()
+
+    frame = tk.Frame(parent, width=WIDTH, height=HEIGHT)
     frame.bind("<Key>", handle.keyboard)
-    frame.pack()
+    frame.grid()
 
-    canvas = tk.Canvas(frame,bg="pink", width=640, height=480)
-    canvas.pack()
+    alive = parent.flip()
 
-    camera = Vision()
-    camera.start()
+    canvas = tk.Canvas(frame, width=640, height=480)
+    canvas.grid(column=0, row=0)
+
+    head_text = "Faça o símbolo abaixo.\nPressione [espaço] para tirar uma foto"
+
+    label = tk.Label(frame, text=head_text, font="ITALIC")
+    label.grid(column=0, row=1)
+
+    simbols = ["0","1","2","3","4","5","6","7","8","9"]
+
+    pointer = 0
+
+    simbol_label = tk.Label(frame, text="0", font="ITALIC")
+    simbol_label.grid(column=1, row=1)
 
     frame.focus_set()
 
-    alive = True
-
-    parent.update()
+    alive = parent.flip()
 
     while alive:
         
@@ -43,14 +57,16 @@ def render(page: Page):
 
             imgT = camera.getPhoto()
             canvas.create_image((0,0),anchor=tk.NW, image=imgT)
-            parent.update()
+            alive = parent.flip()
 
         elif event["origin"] == "keyboard":
             if event["keycode"] == 32:
-                alive = False
+                pointer = (pointer + 1)%10
+                simbol_label = tk.Label(frame, text=simbols[pointer], font="ITALIC")
+                simbol_label.grid(column=1, row=1)
+
             else:
                 print(event["keycode"])
-
     
     frame.destroy()
     t.kill()
