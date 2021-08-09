@@ -15,7 +15,9 @@ def render(page: Page):
     L = []
 
     parent = page.parent()
-    frame = tk.Frame(parent)
+    pallete = parent.getPallete()
+
+    frame = tk.Frame(parent, bg=pallete["background"])
     frame.pack()
 
     cmd = tk.Button(frame, text="botao", command=lambda: handle(L))

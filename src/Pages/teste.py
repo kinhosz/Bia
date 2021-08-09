@@ -17,27 +17,22 @@ def render(page: Page):
 
     parent = page.parent()
     WIDTH, HEIGHT = parent.shape()
+    Pallete = parent.getPallete()
 
-    frame = tk.Frame(parent, width=WIDTH, height=HEIGHT)
+    frame = tk.Frame(parent, width=WIDTH, height=HEIGHT, bg=Pallete["background"])
     frame.bind("<Key>", handle.keyboard)
     frame.grid()
 
-    alive = parent.flip()
+    #area_1 = tk.Frame(frame, width=650, height=600)
+    #area_1.pack(side="left", fill="both",expand="true")
+    #area_2 = tk.Frame(frame,width=550, height=600,bg="red")
+    #area_2.pack(fill="both", expand="true")
 
     canvas = tk.Canvas(frame, width=640, height=480)
-    canvas.grid(column=0, row=0)
+    canvas.pack()
 
-    head_text = "Faça o símbolo abaixo.\nPressione [espaço] para tirar uma foto"
-
-    label = tk.Label(frame, text=head_text, font="ITALIC")
-    label.grid(column=0, row=1)
-
-    simbols = ["0","1","2","3","4","5","6","7","8","9"]
-
-    pointer = 0
-
-    simbol_label = tk.Label(frame, text="0", font="ITALIC")
-    simbol_label.grid(column=1, row=1)
+    #label = tk.Label(area_2, text="oi", background=Pallete["background"])
+    #label.pack()
 
     frame.focus_set()
 
@@ -60,13 +55,7 @@ def render(page: Page):
             alive = parent.flip()
 
         elif event["origin"] == "keyboard":
-            if event["keycode"] == 32:
-                pointer = (pointer + 1)%10
-                simbol_label = tk.Label(frame, text=simbols[pointer], font="ITALIC")
-                simbol_label.grid(column=1, row=1)
-
-            else:
-                print(event["keycode"])
+            print(event["keycode"])
     
     frame.destroy()
     t.kill()

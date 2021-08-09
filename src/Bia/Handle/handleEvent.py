@@ -7,6 +7,13 @@ class HandleEvent():
     def __init__(self, buffer: Queue):
         self.buffer = buffer
 
+    def button(self, name):
+        event = {}
+        event["origin"] = "button"
+        event["name"] = name
+
+        self.buffer.push(event)
+
     def timer(self):
         event = {}
         event["origin"] = "timer"
