@@ -41,6 +41,8 @@ def render(page: Page):
     database = json.loads(f.read())
     f.close()
 
+    new_db = {}
+
     # get the root window reference
     parent = page.parent()
 
@@ -158,7 +160,7 @@ def render(page: Page):
 
                     state = 1
                 else:
-                    save_image(database, img.focus(), text2_content.get())
+                    save_image(new_db, img.focus(), text2_content.get())
                     text1_content.set("Faça o seguinte símbolo")
                     text2_content.set(str(random.randint(0,9)))
 
@@ -169,6 +171,14 @@ def render(page: Page):
     camera.kill()
 
     # save the database
+
+    # easy to merge pull requests
+    id = ""
+    for i in range(30):
+        id = id + str(random.randint(0,9))
+
+    database[id] = new_db
+
     f = open("database/images.json","w")
     f.write(json.dumps(database))
     f.close()
