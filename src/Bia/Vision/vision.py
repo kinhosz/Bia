@@ -2,6 +2,7 @@ import cv2, time
 from threading import Thread, Lock
 import warnings
 from PIL import Image, ImageTk
+import Bia
 
 class Vision(Thread):
     
@@ -20,16 +21,15 @@ class Vision(Thread):
             if ret == False:
                 warnings.warn("An error occured during get the frame")
                 frame = None
-            self.__frame = frame
+            self.__frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
 
     def getPhoto(self):
         frame = self.__frame 
 
-        if frame == []:
-            return None
+        while frame == []:
+            frame = self.__frame
 
-        frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-        return ImageTk.PhotoImage(Image.fromarray(frame,mode="RGB"))
+        return Bia.Picture(frame)
 
     def getFrame(self):
         return self.__frame
