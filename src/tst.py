@@ -20,12 +20,12 @@ data = np.array(images_json[0]["image"]).astype("uint8")
 im = cv.imread('/Users/samuelbrasileiro/Desktop/euu.png')
 # data = np.array([np.concatenate(column) for column in data])
 gray = cv.cvtColor(data, cv2.COLOR_RGB2GRAY)
-# gray = cv2.GaussianBlur(gray, (1, 1), 7)
+gray = cv.GaussianBlur(gray, (3,3), 0, 0, cv.BORDER_DEFAULT)
 
 dft = cv.dft(np.float32(gray),flags = cv.DFT_COMPLEX_OUTPUT)
 
 dft_shift = np.fft.fftshift(dft)
-dft_shift = cv2.GaussianBlur(dft_shift, (1, 1), 7)
+#dft_shift = cv2.GaussianBlur(dft_shift, (3, 1), 7)
 
 
 magnitude_spectrum = 20*np.log(cv.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]))
@@ -36,7 +36,7 @@ crow,ccol = int(rows/2) , int(cols/2)
 # create a mask first, center square is 1, remaining all zeros
 mask = np.zeros((rows,cols,2),np.uint8)
 
-r_out = 100
+r_out = 150
 r_in = 25
 
 x, y = np.ogrid[:rows, :cols]
