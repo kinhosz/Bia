@@ -189,4 +189,3 @@ def render(page: Page):
     f.close()
 
     return code
-    
