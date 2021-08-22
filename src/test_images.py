@@ -6,6 +6,17 @@ from PIL import Image
 
 import cv2 as cv
 from matplotlib import pyplot as plt
+def distance(point1,point2):
+    return np.sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)
+
+def gaussianHP(D0,imgShape):
+    base = np.zeros(imgShape[:2])
+    rows, cols = imgShape[:2]
+    center = (rows/2,cols/2)
+    for x in range(cols):
+        for y in range(rows):
+            base[y,x] = 1 - np.exp(((-distance((y,x),center)**2)/(2*(D0**2))))
+    return base
 
 f = open("database/images.json","r")
 
@@ -22,12 +33,15 @@ im = cv.imread('/Users/samuelbrasileiro/Desktop/euu.png')
 gray = cv.cvtColor(data, cv2.COLOR_RGB2GRAY)
 
 
+
 dft = cv.dft(np.float32(gray),flags = cv.DFT_COMPLEX_OUTPUT)
+
 
 dft_shift = np.fft.fftshift(dft)
 
 magnitude_spectrum = 20*np.log(cv.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]))
 
+gaussian_dft_shift = cv2.GaussianBlur(dft_shift, (3, 3), 0)
 
 rows, cols = gray.shape
 crow,ccol = int(rows/2) , int(cols/2)
@@ -35,16 +49,16 @@ crow,ccol = int(rows/2) , int(cols/2)
 mask = np.zeros((rows,cols,2),np.uint8)
 
 r_out = 100
-r_in = 20
+r_in = 10
 
 x, y = np.ogrid[:rows, :cols]
 mask_area = np.logical_and(((x - crow) ** 2 + (y - ccol) ** 2 >= r_in ** 2), ((x - crow) ** 2 + (y - ccol) ** 2 <= r_out ** 2))
 mask[mask_area] = 1
-#
+
+fshift = gaussian_dft_shift*mask
 
 
-# apply mask and inverse DFT
-fshift = dft_shift*mask
+print(fshift)
 
 fshift_mask_mag = 20*np.log(cv.magnitude(fshift[:,:,0],fshift[:,:,1]))
 
