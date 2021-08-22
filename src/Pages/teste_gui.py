@@ -4,6 +4,7 @@ from Bia import *
 import random
 import json
 
+import numpy as np
 def save_image(database, data, label):
 
     if "size" not in database.keys():
@@ -19,12 +20,7 @@ def save_image(database, data, label):
     else:
         width = len(data[0])
 
-    data_sz = []
-
-    for i in range(height):
-        for j in range(width):
-            for k in range(3):
-                data_sz.append(int(data[i][j][k]))
+    data_sz = np.array(data).tolist()
 
     database["images"].append({
         "width": width,
@@ -34,12 +30,19 @@ def save_image(database, data, label):
         "image": data_sz
     })
 
+def timerasync(parent, camera, cam_label, state):
+    return ""
+
+        
+
 def render(page: Page):
 
     # get the image database
     f = open("database/images.json","r")
     database = json.loads(f.read())
     f.close()
+
+    FPS = 15
 
     new_db = {}
 
@@ -73,7 +76,9 @@ def render(page: Page):
     camera.start()
 
     # create a timer
-    timer = Timer(1/30, handle.timer)
+    timer = Timer(1/3, handle.timer)
+    
+
     timer.start()
 
     # create a cam label
@@ -120,29 +125,28 @@ def render(page: Page):
 
     # page state
     state = 0
-
     while parent.flip() and alive:
 
         if buffer.empty():
             continue
-
+        print(buffer.front())
+        
         event = buffer.front()
+        
         buffer.pop()
-
         if event["origin"] == "timer":
+            # t = Thread(target=timerasync, args=(parent, camera, cam_label, state,))
+            # t.start()
             if state == 0:
                 img = camera.getPhoto()
 
                 img.drawSquare()
                 cam_label.config(image=img.image())
 
-                alive = parent.flip()
-            else:
-                pass
-
         elif event["origin"] == "button":
 
             if event["name"] == "cancel":
+                print("cancelou")
                 if state == 0:
                     code = False
                     alive = False
@@ -151,6 +155,7 @@ def render(page: Page):
                     state = 0
             
             elif event["name"] == "confirm":
+                print("aqui porra")
                 if state == 0:
                     img = camera.getPhoto()
                     img.paint()
