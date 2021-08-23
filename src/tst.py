@@ -17,8 +17,8 @@ images_json = database["images"]
 data = np.array(images_json[0]["image"]).astype("uint8")
 
 for index in range(10):
-
-    image_data = np.array(cv.imread('bank/{}.jpg'.format(index))).astype("uint8")
+    string = "mao "+str(index)
+    image_data = np.array(cv.imread('bank/'+string+'.jpg'.format(index))).astype("uint8")
 
     gray = cv.cvtColor(image_data, cv2.COLOR_RGB2GRAY)
     gray = cv.GaussianBlur(gray, (3,3), 0, 0, cv.BORDER_DEFAULT)
@@ -34,7 +34,7 @@ for index in range(10):
     # create a mask first, center square is 1, remaining all zeros
     mask = np.zeros((rows,cols,2),np.uint8)
 
-    r_out = 150
+    r_out = 180
     r_in = 25
 
     x, y = np.ogrid[:rows, :cols]
