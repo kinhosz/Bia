@@ -1,50 +1,82 @@
 import tkinter as tk
 from tkinter.constants import INSERT
+
+from cv2 import buildOpticalFlowPyramid
 from Bia import *
 import random
 import json
+from matplotlib import pyplot as plt
 
-import numpy as np
 def save_image(database, data, label):
 
-    if "size" not in database.keys():
-        database["size"] = 0
-    if "images" not in database.keys():
-        database["images"] = []
-    
-    database["size"] = database["size"] + 1
+    database.append((data, int(label)))
 
-    height = len(data)
-    if height == 0:
-        width = 0
-    else:
-        width = len(data[0])
 
-    data_sz = np.array(data).tolist()
+def read_database(url):
 
-    database["images"].append({
-        "width": width,
-        "height": height,
-        "type": "RGB",
-        "label": label,
-        "image": data_sz
-    })
+    # the size are 300x300 and each pixel in range [0,255]
 
-def timerasync(parent, camera, cam_label, state):
-    return ""
+    db = []
 
+    WIDTH = 300
+    HEIGHT = 300
+
+    # db = [image, label]
+
+    file = open(url, "rb")
+    byte = file.read(1)
+
+    x = 0
+    y = 0
+    row = []
+    image_data = []
+
+    while byte:
+        row.append(int.from_bytes(byte, byteorder="big", signed=False))
+        x = x + 1
+
+        if x == WIDTH:
+            image_data.append(row)
+            y = y + 1
+            x = 0
         
+        if y == HEIGHT:
+            byte = file.read(1)
+            label = int.from_bytes(byte, byteorder="big", signed=False)
+            y = 0
+            db.append((image_data, label))
+
+        byte = file.read(1)
+    
+    file.close()
+    return db
+
+def save_database(url, database):
+
+    file = open(url, "wb")
+
+    size = len(database)
+
+    for i in range(size):
+
+        for x in range(300):
+            for y in range(300):
+                pixel = int(database[i][0][x][y])
+                byte = pixel.to_bytes(length=1, byteorder='big')
+                file.write(byte)
+        
+        label = int(database[i][1])
+        byte = label.to_bytes(length=1, byteorder='big')
+        file.write(byte)
+    
+    file.close()
 
 def render(page: Page):
 
     # get the image database
-    f = open("database/images.json","r")
-    database = json.loads(f.read())
-    f.close()
+    database = read_database("database/byte_images.bin")
 
-    FPS = 15
-
-    new_db = {}
+    FPS = 30
 
     # get the root window reference
     parent = page.parent()
@@ -76,7 +108,7 @@ def render(page: Page):
     camera.start()
 
     # create a timer
-    timer = Timer(1/3, handle.timer)
+    timer = Timer(1/FPS, handle.timer)
     
 
     timer.start()
@@ -129,7 +161,6 @@ def render(page: Page):
 
         if buffer.empty():
             continue
-        print(buffer.front())
         
         event = buffer.front()
         
@@ -146,7 +177,6 @@ def render(page: Page):
         elif event["origin"] == "button":
 
             if event["name"] == "cancel":
-                print("cancelou")
                 if state == 0:
                     code = False
                     alive = False
@@ -155,17 +185,16 @@ def render(page: Page):
                     state = 0
             
             elif event["name"] == "confirm":
-                print("aqui porra")
                 if state == 0:
                     img = camera.getPhoto()
                     img.paint()
-                    
+                    gray_img = img.imageSegmentation()
                     text1_content.set("Deseja salvar a imagem?")
-                    cam_label.config(image=img.image())
+                    cam_label.config(image=img.toImage(gray_img,"L"))
 
                     state = 1
                 else:
-                    save_image(new_db, img.focus(), text2_content.get())
+                    save_image(database, img.focus2(), text2_content.get())
                     text1_content.set("Faça o seguinte símbolo")
                     text2_content.set(str(random.randint(0,9)))
 
@@ -177,15 +206,6 @@ def render(page: Page):
 
     # save the database
 
-    # easy to merge pull requests
-    id = ""
-    for i in range(30):
-        id = id + str(random.randint(0,9))
-
-    database[id] = new_db
-
-    f = open("database/images.json","w")
-    f.write(json.dumps(database))
-    f.close()
+    save_database("database/byte_images.bin", database)
 
     return code
