@@ -6,6 +6,7 @@ class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.__routes = {}
+        print("If the screen is small please change the width to 1800 and height to 800 at file app.py")
         self.__width = 1200
         self.__height = 600
         self.__route = "homepage"

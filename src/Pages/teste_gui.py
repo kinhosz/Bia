@@ -15,7 +15,7 @@ def save_image(database, data, label):
 def read_database(url):
 
     # the size are 300x300 and each pixel in range [0,255]
-
+    print("aaa")
     db = []
 
     WIDTH = 300
@@ -76,7 +76,7 @@ def render(page: Page):
     # get the image database
     database = read_database("database/byte_images.bin")
 
-    FPS = 30
+    FPS = 3
 
     # get the root window reference
     parent = page.parent()

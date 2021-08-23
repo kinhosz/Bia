@@ -21,7 +21,7 @@ class HandleEvent():
         self.buffer.push(event)
 
     def keyboard(self, data: Event):
-        print("estou aqui caralho")
+        
         event = {}
         event["origin"] = "keyboard"
         event["type"] = self.getEventType(data.type)
