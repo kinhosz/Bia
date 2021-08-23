@@ -6,10 +6,10 @@ class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.__routes = {}
-        self.__width = 1200
-        self.__height = 600
+        self.__width = 1800
+        self.__height = 900
         self.__route = "homepage"
-        self.__FPS = 30
+        self.__FPS = 15
         self.__close = False
         ### Pallete
         self.__pallete = {

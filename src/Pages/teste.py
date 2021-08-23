@@ -4,7 +4,7 @@ from datetime import datetime
 
 def render(page: Page):
 
-    FPS = 30
+    FPS = 15
 
     buffer = Queue()
     handle = HandleEvent(buffer)
