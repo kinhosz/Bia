@@ -4,9 +4,10 @@
 A Bia compreende qual algarismo em libras está sendo realizado diante à webcam. 
 
 ## Dependências
-Você precisa instalar o opencv via pip
+Você precisa instalar o opencv e o image via pip
 ```sh
 pip install opencv-python
+pip install image
 ```
 Caso existam problema ao instalar o ```opencv-python```, por favor, cheque este [link](https://pypi.org/project/opencv-python/)  
 
@@ -20,8 +21,11 @@ Se você deseja adicionar novas frameworks, não esqueça de atualizar o ```read
 
 ## Como rodar
 
-No prompt de comando digite
+Para excutar o aplicativo, no prompt de comando digite
 ```python App.py```
+
+Para excutar os exemplos, no prompt de comando digite
+```python Fourier.py```
 
 ## Considerações finais
 
