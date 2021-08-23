@@ -35,7 +35,7 @@ for index in range(10):
     mask = np.zeros((rows,cols,2),np.uint8)
 
     r_out = 180
-    r_in = 25
+    r_in = 20
 
     x, y = np.ogrid[:rows, :cols]
     mask_area = np.logical_and(((x - crow) ** 2 + (y - ccol) ** 2 >= r_in ** 2), ((x - crow) ** 2 + (y - ccol) ** 2 <= r_out ** 2))
