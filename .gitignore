@@ -5,3 +5,5 @@ src/Bia/Picture/__pycache__
 src/Bia/Panel/__pycache__
 src/Bia/Vision/__pycache__
 src/Pages/__pycache__
+src/Bia/Network/__pycache__
+src/Bia/Network/lib/__pycache__

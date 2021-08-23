@@ -6,3 +6,5 @@ from Bia.Picture.picture import Picture
 from Bia.Panel.app import App
 from Bia.Panel.page import Page
 from Bia.Vision.vision import *
+from Bia.Network.model import Network
+from Bia.Network.lib.Function import *
