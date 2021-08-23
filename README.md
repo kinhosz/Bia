@@ -22,6 +22,8 @@ Se você deseja adicionar novas frameworks, não esqueça de atualizar o ```read
 
 Para treinar a deep learning:
 ```python App.py```
+
+
 Para deixar a DL tentar adivinhar qual digito você está mostrando:( ainda não está funcionando)
 ```python predict.py```
 
